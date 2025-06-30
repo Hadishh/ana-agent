@@ -71,6 +71,7 @@ class DeepSeekAgent(Agent):
 
         items = res[0].outputs[0].text.split("</think>")[-1].split("\n")
 
+        print(items)
 
     def _create_message_for_functions(self, tool_functions, action_functions, dialogue, context):
         prompt = read_file("./prompts/function_prompt.txt")
