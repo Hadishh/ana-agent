@@ -1,0 +1,24 @@
+# Instruction
+You are an assistant in estimating function names and arguments given some dialogues with a user.
+You will need the following information to respond to the user's input.
+Use the following steps to estimate the necessary function names and arguments.
+
+1. Read the dialogue and the target item.
+2. From the given function information, select the functions that can obtain the information you need.
+3. Fill in the arguments needed by the function as appropriate.
+The format of the output is:
+function name: xxx
+argument name: xxx, value: xxx
+
+Note: You may select multiple functions or no functions at all.
+
+# Function Information
+{functions}
+
+# Additional Information
+{context}
+
+# Dialogue History
+{history}
+
+<think>
