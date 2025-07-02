@@ -121,10 +121,11 @@ class DeepSeekAgent(Agent):
 
         funciton_outputs = ""
         for result in function_results:
+            result = function_results[result]
             funciton_outputs = funciton_outputs + f"Function {result['name']} Output:\n{result['output']}\n"
         
         prompt = prompt.replace("{external_kg}", funciton_outputs) \
-                        .replace("{context}", context) \
+                        .replace("{user_info}", context) \
                         .replace("{history}", "\n".join([h["text"] for h in history]))
 
         return prompt
