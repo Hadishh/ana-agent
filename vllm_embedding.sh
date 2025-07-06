@@ -9,6 +9,6 @@ set +o allexport
 
 echo $OPENAI_API_KEY
 # now every variable in .env is in your environment
-CUDA_VISIBLE_DEVICES=0,1,2,3 vllm serve $LLM_PATH --served-model-name deepseek-r1-32b \
+CUDA_VISIBLE_DEVICES=7 vllm serve $EMBEDDER_PATH --served-model-name e5-large \
     --dtype auto --api-key $OPENAI_API_KEY  \
-    --host 0.0.0.0 --port 26700 --tensor-parallel-size 4
+    --host 0.0.0.0 --port 26701 --tensor-parallel-size 1

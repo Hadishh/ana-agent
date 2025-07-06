@@ -10,8 +10,8 @@ from agents.utils import read_file
 class DeepSeekAgent(Agent):
     def __load_llm_client(self):
         self.llm_client = OpenAI(
-            base_url=os.getenv("OPEN_AI_BASE_URL"),
-            api_key=os.getenv("OPEN_AI_API_KEY"),
+            base_url=os.getenv("OPENAI_BASE_URL"),
+            api_key=os.getenv("OPENAI_API_KEY"),
         )
 
     def __init__(self, model_name="deepseek-r1-32b"):
