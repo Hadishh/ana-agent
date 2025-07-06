@@ -1,39 +1,37 @@
-import vllm
 import os
 from datetime import datetime
 import copy
+from openai import OpenAI
 
 from agents.agent_base import Agent
 from agents.utils import read_file
 
 
 class DeepSeekAgent(Agent):
-    def __load_vllm(self):
-        self.llm = vllm.LLM(
-            model=self.model_path,
-            tensor_parallel_size=4,
-            gpu_memory_utilization=0.7
+    def __load_llm_client(self):
+        self.llm_client = OpenAI(
+            base_url=os.getenv("OPEN_AI_BASE_URL"),
+            api_key=os.getenv("OPEN_AI_API_KEY"),
         )
 
     def __init__(self, model_name="deepseek-r1-32b"):
         super().__init__()
-        self.model_path = os.getenv("AGENT_LLM_PATH", None)
-        self.__load_vllm()
-
-        self.tokenizer = self.llm.get_tokenizer()
+        self.__load_llm_client()
+        self.model_name= model_name
 
         self.MAX_NEW_TOKENS = 16384
+        self.temperature= 0.6
     
     def generate_functions_and_responses(self, tool_registry, action_registry, persona, dialogue, executor):
         functions = self._create_message_for_functions(tool_registry, action_registry, dialogue, persona)
-        res = self.llm.generate(
-            [functions],
-            vllm.SamplingParams(
-                max_tokens=self.MAX_NEW_TOKENS
-            )
+        res = self.llm_client.completions.create(
+            model=self.model_name,
+            prompt=functions,
+            max_tokens=self.MAX_NEW_TOKENS,
+            temperature=0.6
         )
 
-        items = res[0].outputs[0].text.split("</think>")[-1].split("\n")
+        items = res.choices[0].text.split("</think>")[-1].split("\n")
         final_functions = []
         res_item = {}
         for item in items:
@@ -62,14 +60,14 @@ class DeepSeekAgent(Agent):
         function_results = executor.execute(final_functions)
 
         dialogue_prompt = self._create_dialogue_message(persona, dialogue, function_results)
-        response = self.llm.generate(
-            [dialogue_prompt], 
-            vllm.SamplingParams(
-                max_tokens=self.MAX_NEW_TOKENS
-            )
+        response = self.llm_client.completions.create(
+            model=self.model_name,
+            prompt=dialogue_prompt,
+            max_tokens=self.MAX_NEW_TOKENS,
+            temperature=0.6
         )
 
-        items = res[0].outputs[0].text.split("</think>")[-1].split("\n")
+        items = response.choices[0].text.split("</think>")[-1].split("\n")
 
         print(items)
 
