@@ -1,0 +1,48 @@
+services:
+  vllm-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: vllm-container:latest
+    shm_size: 1gb
+    entrypoint: ["/bin/bash", "-c", "/workspace/vllm_serve.sh"]
+    volumes:
+      - deepseek_model:/models/DeepSeek:ro
+    gpus: "all"
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=0,1,2,3
+    env_file:
+      - ./.env
+    ports:
+      - "26700:26700"
+    
+
+  vllm-embed:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: vllm-container:latest
+    entrypoint: ["/bin/bash", "-c", "/workspace/vllm_embedding.sh"]
+    volumes:
+      - e5_model:/models/e5-large-v2:ro
+    gpus: "all"
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=7
+    env_file:
+      - ./.env
+    ports:
+      - "26701:26701"
+
+volumes:
+  deepseek_model:
+    driver: local
+    driver_opts:
+      type: none
+      device: /local/ssd2/hadish/DeepSeek-R1-Qwen-2.5-32B
+      o: bind
+  e5_model:
+    driver: local
+    driver_opts:
+      type: none
+      device: /local/ssd2/hadish/e5-large-v2
+      o: bind
