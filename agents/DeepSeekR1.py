@@ -98,7 +98,7 @@ class DeepSeekAgent(Agent):
         history = [
             {"id": 1, "text": "Hi ANA!"},
             {"id": 1, "text": "Hi Hadi how are you today?"},
-            {"id": 1, "text": "good, planning for a walk, how is the weather today?"},
+            {"id": 1, "text": "My neighbor is coming for a visit!"},
         ]
         input_text = history[-1]["text"]
 
