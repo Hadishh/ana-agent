@@ -26,6 +26,6 @@ def get_weather(city_name: str, datetime: datetime):
 
 func_references = {"get_weather": get_weather}
 
-weather_information = {"function_registry": {
+registry = {
     f.name : convert_to_openai_function(f, strict=True) for f in func_references.values()
-}}
+}

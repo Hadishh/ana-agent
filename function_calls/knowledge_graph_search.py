@@ -7,23 +7,29 @@ from datetime import datetime
 @tool
 def graph_search(query):
     """
-    Search in a personalized knowledge graph given the query. The knowledge graph is about the User's personal 
-    relations and daily life. 
-    
+    Searches a personalized knowledge graph for information related to the user's personal relationships,
+    daily life, and specific events or entities within their personal context. This function leverages
+    a unique knowledge graph tailored to the individual user, allowing for highly relevant and
+    context-aware responses to queries about their personal world.
+
     Parameters:
     ----------
     query: str
-        The query about relationships, entities, and temporal facts about User's life
+        The natural language query text to be searched within the personalized knowledge graph.
+        Examples include "When is Mom's birthday?", "What did I do last Tuesday?",
+        "Where did I put my keys?", or "Who is Sarah's husband?".
 
     Returns:
     -------
     str
-        Answer to the given query.
+        A comprehensive and contextually relevant answer to the given query, extracted from
+        the personalized knowledge graph. If the information is not found, a suitable
+        message indicating that will be returned.
     """
     return f"GRAPH"
 
 func_references = {"graph_search": graph_search}
 
-weather_information = {"function_registry": {
+registry = {
     f.name : convert_to_openai_function(f, strict=True) for f in func_references.values()
-}}
+}
